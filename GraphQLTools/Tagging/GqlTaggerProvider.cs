@@ -66,14 +66,12 @@ namespace GraphQLTools.Tagging
 
         private void Workspace_WorkspaceChanged(object sender, WorkspaceChangeEventArgs e)
         {
-            switch (e.Kind)
+            if (e.Kind != WorkspaceChangeKind.ProjectChanged)
+                return;
+
+            foreach (GqlTagger tagger in _openTaggers.Values)
             {
-                case WorkspaceChangeKind.ProjectChanged:
-                    foreach (GqlTagger tagger in _openTaggers.Values)
-                    {
-                        tagger.ScanDocument(e.ProjectId);
-                    }
-                    break;
+                tagger.ScanDocument(e.ProjectId);
             }
         }
 

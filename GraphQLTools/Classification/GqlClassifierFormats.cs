@@ -10,12 +10,12 @@ namespace GraphQLTools.Classification
         public GqlClassificationFormatDefinition()
         {
             DisplayName = NameCore;
-            ForegroundColor = ThemeAwareColorCore;
+            ForegroundColor = ColorCore;
         }
 
         protected abstract string NameCore { get; }
 
-        protected abstract Color ThemeAwareColorCore { get; }
+        protected abstract Color ColorCore { get; }
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -26,13 +26,14 @@ namespace GraphQLTools.Classification
     internal sealed class GqlPunctuatorFormat : GqlClassificationFormatDefinition
     {
         public const string Name = "GraphQL - Punctuator";
-        public static readonly Color LightModeColor = Color.FromRgb(20, 20, 20);
-        public static readonly Color DarkModeColor = Color.FromRgb(221, 221, 221);
-        public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
+
+        private static readonly Color s_lightModeColor = Color.FromRgb(20, 20, 20);
+        private static readonly Color s_darkModeColor = Color.FromRgb(221, 221, 221);
+        public static ref readonly Color Color => ref GqlClassificationTypes.GetThemeAwareColor(in s_lightModeColor, in s_darkModeColor);
 
         protected override string NameCore => Name;
 
-        protected override Color ThemeAwareColorCore => ThemeAwareColor;
+        protected override Color ColorCore => Color;
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -43,13 +44,14 @@ namespace GraphQLTools.Classification
     internal sealed class GqlKeywordFormat : GqlClassificationFormatDefinition
     {
         public const string Name = "GraphQL - Keyword";
-        public static readonly Color LightModeColor = Color.FromRgb(177, 26, 4);
-        public static readonly Color DarkModeColor = Color.FromRgb(74, 162, 225);
-        public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
+
+        private static readonly Color s_lightModeColor = Color.FromRgb(177, 26, 4);
+        private static readonly Color s_darkModeColor = Color.FromRgb(74, 162, 225);
+        public static ref readonly Color Color => ref GqlClassificationTypes.GetThemeAwareColor(in s_lightModeColor, in s_darkModeColor);
 
         protected override string NameCore => Name;
 
-        protected override Color ThemeAwareColorCore => ThemeAwareColor;
+        protected override Color ColorCore => Color;
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -60,13 +62,14 @@ namespace GraphQLTools.Classification
     internal sealed class GqlOperationNameFormat : GqlClassificationFormatDefinition
     {
         public const string Name = "GraphQL - Operation name";
-        public static readonly Color LightModeColor = Color.FromRgb(210, 5, 78);
-        public static readonly Color DarkModeColor = Color.FromRgb(252, 222, 143);
-        public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
+
+        private static readonly Color s_lightModeColor = Color.FromRgb(210, 5, 78);
+        private static readonly Color s_darkModeColor = Color.FromRgb(252, 222, 143);
+        public static ref readonly Color Color => ref GqlClassificationTypes.GetThemeAwareColor(in s_lightModeColor, in s_darkModeColor);
 
         protected override string NameCore => Name;
 
-        protected override Color ThemeAwareColorCore => ThemeAwareColor;
+        protected override Color ColorCore => Color;
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -77,13 +80,14 @@ namespace GraphQLTools.Classification
     internal sealed class GqlFragmentNameFormat : GqlClassificationFormatDefinition
     {
         public const string Name = "GraphQL - Fragment name";
-        public static readonly Color LightModeColor = Color.FromRgb(31, 209, 214);
-        public static readonly Color DarkModeColor = Color.FromRgb(217, 251, 145);
-        public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
+
+        private static readonly Color s_lightModeColor = Color.FromRgb(31, 209, 214);
+        private static readonly Color s_darkModeColor = Color.FromRgb(217, 251, 145);
+        public static ref readonly Color Color => ref GqlClassificationTypes.GetThemeAwareColor(in s_lightModeColor, in s_darkModeColor);
 
         protected override string NameCore => Name;
 
-        protected override Color ThemeAwareColorCore => ThemeAwareColor;
+        protected override Color ColorCore => Color;
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -94,13 +98,14 @@ namespace GraphQLTools.Classification
     internal sealed class GqlVariableNameFormat : GqlClassificationFormatDefinition
     {
         public const string Name = "GraphQL - Variable name";
-        public static readonly Color LightModeColor = Color.FromRgb(57, 125, 19);
-        public static readonly Color DarkModeColor = Color.FromRgb(123, 219, 36);
-        public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
+
+        private static readonly Color s_lightModeColor = Color.FromRgb(57, 125, 19);
+        private static readonly Color s_darkModeColor = Color.FromRgb(123, 219, 36);
+        public static ref readonly Color Color => ref GqlClassificationTypes.GetThemeAwareColor(in s_lightModeColor, in s_darkModeColor);
 
         protected override string NameCore => Name;
 
-        protected override Color ThemeAwareColorCore => ThemeAwareColor;
+        protected override Color ColorCore => Color;
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -111,13 +116,14 @@ namespace GraphQLTools.Classification
     internal sealed class GqlDirectiveNameFormat : GqlClassificationFormatDefinition
     {
         public const string Name = "GraphQL - Directive name";
-        public static readonly Color LightModeColor = Color.FromRgb(179, 48, 134);
-        public static readonly Color DarkModeColor = Color.FromRgb(224, 98, 212);
-        public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
+
+        private static readonly Color s_lightModeColor = Color.FromRgb(179, 48, 134);
+        private static readonly Color s_darkModeColor = Color.FromRgb(224, 98, 212);
+        public static ref readonly Color Color => ref GqlClassificationTypes.GetThemeAwareColor(in s_lightModeColor, in s_darkModeColor);
 
         protected override string NameCore => Name;
 
-        protected override Color ThemeAwareColorCore => ThemeAwareColor;
+        protected override Color ColorCore => Color;
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -128,13 +134,14 @@ namespace GraphQLTools.Classification
     internal sealed class GqlTypeNameFormat : GqlClassificationFormatDefinition
     {
         public const string Name = "GraphQL - Type name";
-        public static readonly Color LightModeColor = Color.FromRgb(202, 152, 0);
-        public static readonly Color DarkModeColor = Color.FromRgb(80, 240, 190);
-        public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
+
+        private static readonly Color s_lightModeColor = Color.FromRgb(202, 152, 0);
+        private static readonly Color s_darkModeColor = Color.FromRgb(80, 240, 190);
+        public static ref readonly Color Color => ref GqlClassificationTypes.GetThemeAwareColor(in s_lightModeColor, in s_darkModeColor);
 
         protected override string NameCore => Name;
 
-        protected override Color ThemeAwareColorCore => ThemeAwareColor;
+        protected override Color ColorCore => Color;
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -145,13 +152,14 @@ namespace GraphQLTools.Classification
     internal sealed class GqlFieldNameFormat : GqlClassificationFormatDefinition
     {
         public const string Name = "GraphQL - Field name";
-        public static readonly Color LightModeColor = Color.FromRgb(31, 97, 160);
-        public static readonly Color DarkModeColor = Color.FromRgb(121, 164, 171);
-        public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
+
+        private static readonly Color s_lightModeColor = Color.FromRgb(31, 97, 160);
+        private static readonly Color s_darkModeColor = Color.FromRgb(121, 164, 171);
+        public static ref readonly Color Color => ref GqlClassificationTypes.GetThemeAwareColor(in s_lightModeColor, in s_darkModeColor);
 
         protected override string NameCore => Name;
 
-        protected override Color ThemeAwareColorCore => ThemeAwareColor;
+        protected override Color ColorCore => Color;
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -162,13 +170,14 @@ namespace GraphQLTools.Classification
     internal sealed class GqlAliasedFieldNameFormat : GqlClassificationFormatDefinition
     {
         public const string Name = "GraphQL - Aliased field name";
-        public static readonly Color LightModeColor = Color.FromRgb(28, 146, 169);
-        public static readonly Color DarkModeColor = Color.FromRgb(96, 170, 137);
-        public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
+
+        private static readonly Color s_lightModeColor = Color.FromRgb(28, 146, 169);
+        private static readonly Color s_darkModeColor = Color.FromRgb(96, 170, 137);
+        public static ref readonly Color Color => ref GqlClassificationTypes.GetThemeAwareColor(in s_lightModeColor, in s_darkModeColor);
 
         protected override string NameCore => Name;
 
-        protected override Color ThemeAwareColorCore => ThemeAwareColor;
+        protected override Color ColorCore => Color;
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -179,13 +188,14 @@ namespace GraphQLTools.Classification
     internal sealed class GqlArgumentNameFormat : GqlClassificationFormatDefinition
     {
         public const string Name = "GraphQL - Argument name";
-        public static readonly Color LightModeColor = Color.FromRgb(139, 43, 185);
-        public static readonly Color DarkModeColor = Color.FromRgb(195, 255, 255);
-        public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
+
+        private static readonly Color s_lightModeColor = Color.FromRgb(139, 43, 185);
+        private static readonly Color s_darkModeColor = Color.FromRgb(195, 255, 255);
+        public static ref readonly Color Color => ref GqlClassificationTypes.GetThemeAwareColor(in s_lightModeColor, in s_darkModeColor);
 
         protected override string NameCore => Name;
 
-        protected override Color ThemeAwareColorCore => ThemeAwareColor;
+        protected override Color ColorCore => Color;
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -196,13 +206,14 @@ namespace GraphQLTools.Classification
     internal sealed class GqlObjectFieldNameFormat : GqlClassificationFormatDefinition
     {
         public const string Name = "GraphQL - Object field name";
-        public static readonly Color LightModeColor = Color.FromRgb(168, 130, 108);
-        public static readonly Color DarkModeColor = Color.FromRgb(218, 197, 216);
-        public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
+
+        private static readonly Color s_lightModeColor = Color.FromRgb(168, 130, 108);
+        private static readonly Color s_darkModeColor = Color.FromRgb(218, 197, 216);
+        public static ref readonly Color Color => ref GqlClassificationTypes.GetThemeAwareColor(in s_lightModeColor, in s_darkModeColor);
 
         protected override string NameCore => Name;
 
-        protected override Color ThemeAwareColorCore => ThemeAwareColor;
+        protected override Color ColorCore => Color;
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -213,13 +224,14 @@ namespace GraphQLTools.Classification
     internal sealed class GqlStringFormat : GqlClassificationFormatDefinition
     {
         public const string Name = "GraphQL - String";
-        public static readonly Color LightModeColor = Color.FromRgb(214, 66, 146);
-        public static readonly Color DarkModeColor = Color.FromRgb(227, 211, 180);
-        public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
+
+        private static readonly Color s_lightModeColor = Color.FromRgb(214, 66, 146);
+        private static readonly Color s_darkModeColor = Color.FromRgb(227, 211, 180);
+        public static ref readonly Color Color => ref GqlClassificationTypes.GetThemeAwareColor(in s_lightModeColor, in s_darkModeColor);
 
         protected override string NameCore => Name;
 
-        protected override Color ThemeAwareColorCore => ThemeAwareColor;
+        protected override Color ColorCore => Color;
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -230,13 +242,14 @@ namespace GraphQLTools.Classification
     internal sealed class GqlNumberFormat : GqlClassificationFormatDefinition
     {
         public const string Name = "GraphQL - Number";
-        public static readonly Color LightModeColor = Color.FromRgb(40, 130, 249);
-        public static readonly Color DarkModeColor = Color.FromRgb(181, 206, 168);
-        public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
+
+        private static readonly Color s_lightModeColor = Color.FromRgb(40, 130, 249);
+        private static readonly Color s_darkModeColor = Color.FromRgb(181, 206, 168);
+        public static ref readonly Color Color => ref GqlClassificationTypes.GetThemeAwareColor(in s_lightModeColor, in s_darkModeColor);
 
         protected override string NameCore => Name;
 
-        protected override Color ThemeAwareColorCore => ThemeAwareColor;
+        protected override Color ColorCore => Color;
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -247,13 +260,14 @@ namespace GraphQLTools.Classification
     internal sealed class GqlEnumFormat : GqlClassificationFormatDefinition
     {
         public const string Name = "GraphQL - Enum";
-        public static readonly Color LightModeColor = Color.FromRgb(140, 200, 20);
-        public static readonly Color DarkModeColor = Color.FromRgb(190, 183, 255);
-        public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
+
+        private static readonly Color s_lightModeColor = Color.FromRgb(140, 200, 20);
+        private static readonly Color s_darkModeColor = Color.FromRgb(190, 183, 255);
+        public static ref readonly Color Color => ref GqlClassificationTypes.GetThemeAwareColor(in s_lightModeColor, in s_darkModeColor);
 
         protected override string NameCore => Name;
 
-        protected override Color ThemeAwareColorCore => ThemeAwareColor;
+        protected override Color ColorCore => Color;
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -264,13 +278,14 @@ namespace GraphQLTools.Classification
     internal sealed class GqlNameFormat : GqlClassificationFormatDefinition
     {
         public const string Name = "GraphQL - Name (unclassified)";
-        public static readonly Color LightModeColor = Color.FromRgb(20, 20, 20);
-        public static readonly Color DarkModeColor = Color.FromRgb(192, 192, 192);
-        public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
+
+        private static readonly Color s_lightModeColor = Color.FromRgb(20, 20, 20);
+        private static readonly Color s_darkModeColor = Color.FromRgb(192, 192, 192);
+        public static ref readonly Color Color => ref GqlClassificationTypes.GetThemeAwareColor(in s_lightModeColor, in s_darkModeColor);
 
         protected override string NameCore => Name;
 
-        protected override Color ThemeAwareColorCore => ThemeAwareColor;
+        protected override Color ColorCore => Color;
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -281,13 +296,14 @@ namespace GraphQLTools.Classification
     internal sealed class GqlCommentFormat : GqlClassificationFormatDefinition
     {
         public const string Name = "GraphQL - Comment";
-        public static readonly Color LightModeColor = Color.FromRgb(157, 157, 157);
-        public static readonly Color DarkModeColor = Color.FromRgb(157, 157, 157);
-        public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
+
+        private static readonly Color s_lightModeColor = Color.FromRgb(157, 157, 157);
+        private static readonly Color s_darkModeColor = Color.FromRgb(157, 157, 157);
+        public static ref readonly Color Color => ref GqlClassificationTypes.GetThemeAwareColor(in s_lightModeColor, in s_darkModeColor);
 
         protected override string NameCore => Name;
 
-        protected override Color ThemeAwareColorCore => ThemeAwareColor;
+        protected override Color ColorCore => Color;
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -298,12 +314,13 @@ namespace GraphQLTools.Classification
     internal sealed class GqlErrorFormat : GqlClassificationFormatDefinition
     {
         public const string Name = "GraphQL - Error";
-        public static readonly Color LightModeColor = Color.FromRgb(200, 0, 0);
-        public static readonly Color DarkModeColor = Color.FromRgb(230, 0, 0);
-        public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
+
+        private static readonly Color s_lightModeColor = Color.FromRgb(200, 0, 0);
+        private static readonly Color s_darkModeColor = Color.FromRgb(230, 0, 0);
+        public static ref readonly Color Color => ref GqlClassificationTypes.GetThemeAwareColor(in s_lightModeColor, in s_darkModeColor);
 
         protected override string NameCore => Name;
 
-        protected override Color ThemeAwareColorCore => ThemeAwareColor;
+        protected override Color ColorCore => Color;
     }
 }

@@ -7,7 +7,6 @@ namespace GraphQLTools.Analysis
 {
     internal sealed class RawStringLiteralAnalyzedSpan : AnalyzedSpan
     {
-        private readonly bool _isUnterminated;
         private readonly int _quoteCount;
 
         public RawStringLiteralAnalyzedSpan(Microsoft.CodeAnalysis.CSharp.SyntaxKind syntaxKind, bool isUnterminated, int quoteCount)

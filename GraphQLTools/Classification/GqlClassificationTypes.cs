@@ -17,7 +17,7 @@ namespace GraphQLTools.Classification
             s_isDarkMode = IsDarkMode();
         }
 
-        public static Color GetThemeAwareColor(in Color lightModeColor, in Color darkModeColor) => s_isDarkMode ? darkModeColor : lightModeColor;
+        public static ref readonly Color GetThemeAwareColor(in Color lightModeColor, in Color darkModeColor) => ref s_isDarkMode ? ref darkModeColor : ref lightModeColor;
 
         private static bool IsDarkMode() => VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey).GetBrightness() < 0.5;
 
@@ -61,55 +61,55 @@ namespace GraphQLTools.Classification
             try
             {
                 properties = formatMap.GetTextProperties(Punctuator);
-                formatMap.SetTextProperties(Punctuator, properties.SetForegroundBrush(new SolidColorBrush(GqlPunctuatorFormat.ThemeAwareColor)));
+                formatMap.SetTextProperties(Punctuator, properties.SetForegroundBrush(new SolidColorBrush(GqlPunctuatorFormat.Color)));
 
                 properties = formatMap.GetTextProperties(OperationName);
-                formatMap.SetTextProperties(OperationName, properties.SetForegroundBrush(new SolidColorBrush(GqlOperationNameFormat.ThemeAwareColor)));
+                formatMap.SetTextProperties(OperationName, properties.SetForegroundBrush(new SolidColorBrush(GqlOperationNameFormat.Color)));
 
                 properties = formatMap.GetTextProperties(Keyword);
-                formatMap.SetTextProperties(Keyword, properties.SetForegroundBrush(new SolidColorBrush(GqlKeywordFormat.ThemeAwareColor)));
+                formatMap.SetTextProperties(Keyword, properties.SetForegroundBrush(new SolidColorBrush(GqlKeywordFormat.Color)));
 
                 properties = formatMap.GetTextProperties(FragmentName);
-                formatMap.SetTextProperties(FragmentName, properties.SetForegroundBrush(new SolidColorBrush(GqlFragmentNameFormat.ThemeAwareColor)));
+                formatMap.SetTextProperties(FragmentName, properties.SetForegroundBrush(new SolidColorBrush(GqlFragmentNameFormat.Color)));
 
                 properties = formatMap.GetTextProperties(VariableName);
-                formatMap.SetTextProperties(VariableName, properties.SetForegroundBrush(new SolidColorBrush(GqlVariableNameFormat.ThemeAwareColor)));
+                formatMap.SetTextProperties(VariableName, properties.SetForegroundBrush(new SolidColorBrush(GqlVariableNameFormat.Color)));
 
                 properties = formatMap.GetTextProperties(DirectiveName);
-                formatMap.SetTextProperties(DirectiveName, properties.SetForegroundBrush(new SolidColorBrush(GqlDirectiveNameFormat.ThemeAwareColor)));
+                formatMap.SetTextProperties(DirectiveName, properties.SetForegroundBrush(new SolidColorBrush(GqlDirectiveNameFormat.Color)));
 
                 properties = formatMap.GetTextProperties(TypeName);
-                formatMap.SetTextProperties(TypeName, properties.SetForegroundBrush(new SolidColorBrush(GqlTypeNameFormat.ThemeAwareColor)));
+                formatMap.SetTextProperties(TypeName, properties.SetForegroundBrush(new SolidColorBrush(GqlTypeNameFormat.Color)));
 
                 properties = formatMap.GetTextProperties(FieldName);
-                formatMap.SetTextProperties(FieldName, properties.SetForegroundBrush(new SolidColorBrush(GqlFieldNameFormat.ThemeAwareColor)));
+                formatMap.SetTextProperties(FieldName, properties.SetForegroundBrush(new SolidColorBrush(GqlFieldNameFormat.Color)));
 
                 properties = formatMap.GetTextProperties(AliasedFieldName);
-                formatMap.SetTextProperties(AliasedFieldName, properties.SetForegroundBrush(new SolidColorBrush(GqlAliasedFieldNameFormat.ThemeAwareColor)));
+                formatMap.SetTextProperties(AliasedFieldName, properties.SetForegroundBrush(new SolidColorBrush(GqlAliasedFieldNameFormat.Color)));
 
                 properties = formatMap.GetTextProperties(ArgumentName);
-                formatMap.SetTextProperties(ArgumentName, properties.SetForegroundBrush(new SolidColorBrush(GqlArgumentNameFormat.ThemeAwareColor)));
+                formatMap.SetTextProperties(ArgumentName, properties.SetForegroundBrush(new SolidColorBrush(GqlArgumentNameFormat.Color)));
 
                 properties = formatMap.GetTextProperties(ObjectFieldName);
-                formatMap.SetTextProperties(ObjectFieldName, properties.SetForegroundBrush(new SolidColorBrush(GqlObjectFieldNameFormat.ThemeAwareColor)));
+                formatMap.SetTextProperties(ObjectFieldName, properties.SetForegroundBrush(new SolidColorBrush(GqlObjectFieldNameFormat.Color)));
 
                 properties = formatMap.GetTextProperties(String);
-                formatMap.SetTextProperties(String, properties.SetForegroundBrush(new SolidColorBrush(GqlStringFormat.ThemeAwareColor)));
+                formatMap.SetTextProperties(String, properties.SetForegroundBrush(new SolidColorBrush(GqlStringFormat.Color)));
 
                 properties = formatMap.GetTextProperties(Number);
-                formatMap.SetTextProperties(Number, properties.SetForegroundBrush(new SolidColorBrush(GqlNumberFormat.ThemeAwareColor)));
+                formatMap.SetTextProperties(Number, properties.SetForegroundBrush(new SolidColorBrush(GqlNumberFormat.Color)));
 
                 properties = formatMap.GetTextProperties(Enum);
-                formatMap.SetTextProperties(Enum, properties.SetForegroundBrush(new SolidColorBrush(GqlEnumFormat.ThemeAwareColor)));
+                formatMap.SetTextProperties(Enum, properties.SetForegroundBrush(new SolidColorBrush(GqlEnumFormat.Color)));
 
                 properties = formatMap.GetTextProperties(Name);
-                formatMap.SetTextProperties(Name, properties.SetForegroundBrush(new SolidColorBrush(GqlNameFormat.ThemeAwareColor)));
+                formatMap.SetTextProperties(Name, properties.SetForegroundBrush(new SolidColorBrush(GqlNameFormat.Color)));
 
                 properties = formatMap.GetTextProperties(Comment);
-                formatMap.SetTextProperties(Comment, properties.SetForegroundBrush(new SolidColorBrush(GqlCommentFormat.ThemeAwareColor)));
+                formatMap.SetTextProperties(Comment, properties.SetForegroundBrush(new SolidColorBrush(GqlCommentFormat.Color)));
 
                 properties = formatMap.GetTextProperties(Error);
-                formatMap.SetTextProperties(Error, properties.SetForegroundBrush(new SolidColorBrush(GqlErrorFormat.ThemeAwareColor)));
+                formatMap.SetTextProperties(Error, properties.SetForegroundBrush(new SolidColorBrush(GqlErrorFormat.Color)));
             }
             finally
             {

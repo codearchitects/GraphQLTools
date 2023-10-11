@@ -120,6 +120,9 @@ namespace GraphQLTools.Syntax
 
         private void ParseDocument()
         {
+            if (!ParseDefinition())
+                throw new DiagnosticException(ErrorMessages.ExpectedDefinition);
+
             while (ParseDefinition());
 
             if (_lexer.Kind != TokenKind.EndOfFile)
