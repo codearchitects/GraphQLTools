@@ -102,11 +102,11 @@ namespace GraphQLTools.Analysis
 
                 foreach (ArgumentSyntax argument in invocation.ArgumentList.Arguments)
                 {
-                    if (!semanticModel.IsGqlString(argument))
-                        continue;
-
                     if (cancellationToken.IsCancellationRequested)
                         return;
+
+                    if (!semanticModel.IsGqlString(argument))
+                        continue;
 
                     ScanGqlExpression(snapshot, invocation, argument.Expression);
                 }
@@ -116,7 +116,6 @@ namespace GraphQLTools.Analysis
         private void ScanGqlExpression(ITextSnapshot snapshot, InvocationExpressionSyntax invocation, ExpressionSyntax expression)
         {
             int expressionSpanStart = expression.SpanStart;
-
             LiteralExpressionSyntax literalExpression = expression as LiteralExpressionSyntax;
 
             if (TryGetAt(expressionSpanStart, out LinkedListNode<AnalyzedSpan> existingNode))

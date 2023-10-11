@@ -51,13 +51,16 @@ namespace GraphQLTools.Syntax
 
         public bool MoveNext()
         {
+            if (Kind == TokenKind.EndOfFile)
+                return false;
+
             _spanStart = _source.Position;
             ErrorMessage = null;
 
             if (!_source.MoveNext())
             {
                 Kind = TokenKind.EndOfFile;
-                return false;
+                return true;
             }
 
             char current = _source.Current;
