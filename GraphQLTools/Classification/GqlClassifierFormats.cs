@@ -95,7 +95,7 @@ namespace GraphQLTools.Classification
     {
         public const string Name = "GraphQL - Variable name";
         public static readonly Color LightModeColor = Color.FromRgb(57, 125, 19);
-        public static readonly Color DarkModeColor = Color.FromRgb(150, 237, 20);
+        public static readonly Color DarkModeColor = Color.FromRgb(123, 219, 36);
         public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
 
         protected override string NameCore => Name;
@@ -112,7 +112,7 @@ namespace GraphQLTools.Classification
     {
         public const string Name = "GraphQL - Directive name";
         public static readonly Color LightModeColor = Color.FromRgb(179, 48, 134);
-        public static readonly Color DarkModeColor = Color.FromRgb(224, 116, 200);
+        public static readonly Color DarkModeColor = Color.FromRgb(224, 98, 212);
         public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
 
         protected override string NameCore => Name;
@@ -129,7 +129,7 @@ namespace GraphQLTools.Classification
     {
         public const string Name = "GraphQL - Type name";
         public static readonly Color LightModeColor = Color.FromRgb(202, 152, 0);
-        public static readonly Color DarkModeColor = Color.FromRgb(78, 201, 176);
+        public static readonly Color DarkModeColor = Color.FromRgb(80, 240, 190);
         public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
 
         protected override string NameCore => Name;
@@ -180,7 +180,7 @@ namespace GraphQLTools.Classification
     {
         public const string Name = "GraphQL - Argument name";
         public static readonly Color LightModeColor = Color.FromRgb(139, 43, 185);
-        public static readonly Color DarkModeColor = Color.FromRgb(189, 249, 255);
+        public static readonly Color DarkModeColor = Color.FromRgb(195, 255, 255);
         public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
 
         protected override string NameCore => Name;
@@ -299,7 +299,7 @@ namespace GraphQLTools.Classification
     {
         public const string Name = "GraphQL - Error";
         public static readonly Color LightModeColor = Color.FromRgb(200, 0, 0);
-        public static readonly Color DarkModeColor = Color.FromRgb(200, 0, 0);
+        public static readonly Color DarkModeColor = Color.FromRgb(230, 0, 0);
         public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
 
         protected override string NameCore => Name;
