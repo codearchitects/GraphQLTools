@@ -11,15 +11,14 @@ namespace GraphQLTools.Analysis
         private readonly int _quoteCount;
 
         public RawStringLiteralAnalyzedSpan(Microsoft.CodeAnalysis.CSharp.SyntaxKind syntaxKind, bool isUnterminated, int quoteCount)
-            : base(syntaxKind)
+            : base(syntaxKind, isUnterminated)
         {
-            _isUnterminated = isUnterminated;
             _quoteCount = quoteCount;
         }
 
         protected override int GqlSpanStart => ExpressionSpanStart + _quoteCount;
 
-        protected override int GqlSpanEnd => _isUnterminated
+        protected override int GqlSpanEnd => IsUnterminated
             ? ExpressionSpanEnd
             : ExpressionSpanEnd - _quoteCount;
 

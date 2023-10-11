@@ -13,14 +13,17 @@ namespace GraphQLTools.Analysis
     {
         private volatile SyntaxSpanList _spans;
 
-        protected AnalyzedSpan(SyntaxKind syntaxKind)
+        protected AnalyzedSpan(SyntaxKind syntaxKind, bool isUnterminated)
         {
             SyntaxKind = syntaxKind;
+            IsUnterminated = isUnterminated;
             InvocationSpanStart = -1;
             ExpressionSpanStart = -1;
         }
 
         public SyntaxKind SyntaxKind { get; }
+
+        public bool IsUnterminated { get; }
 
         public int Start => ExpressionSpanStart;
 

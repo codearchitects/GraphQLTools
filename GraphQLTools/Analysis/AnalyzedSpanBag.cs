@@ -108,34 +108,72 @@ namespace GraphQLTools.Analysis
                     if (cancellationToken.IsCancellationRequested)
                         return;
 
-                    ExpressionSyntax expression = argument.Expression;
-                    int expressionSpanStart = expression.SpanStart;
-
-                    if (TryGetAt(expressionSpanStart, out LinkedListNode<AnalyzedSpan> existingNode))
-                    {
-                        lock (_synchronizationLock)
-                        {
-                            _spanListPool.Return(existingNode.Value.ReturnSpanList());
-                            _analyzedSpans.Remove(existingNode);
-                        }
-                    }
-
-                    LiteralExpressionSyntax literalExpression = expression as LiteralExpressionSyntax;
-                    if (literalExpression == null)
-                        continue;
-
-                    if (AnalyzedSpan.TryCreate(snapshot, literalExpression, out AnalyzedSpan analyzedSpan))
-                    {
-                        SyntaxSpanList spans = _spanListPool.Get();
-                        analyzedSpan.Reparse(snapshot, invocation, literalExpression, ref spans);
-
-                        lock (_synchronizationLock)
-                        {
-                            _analyzedSpans.AddLast(analyzedSpan);
-                        }
-                    }
+                    ScanGqlExpression(snapshot, invocation, argument.Expression);
                 }
             }
+        }
+
+        private void ScanGqlExpression(ITextSnapshot snapshot, InvocationExpressionSyntax invocation, ExpressionSyntax expression)
+        {
+            int expressionSpanStart = expression.SpanStart;
+
+            LiteralExpressionSyntax literalExpression = expression as LiteralExpressionSyntax;
+
+            if (TryGetAt(expressionSpanStart, out LinkedListNode<AnalyzedSpan> existingNode))
+            {
+                ScanExistingGqlExpression(snapshot, invocation, literalExpression, existingNode);
+                return;
+            }
+
+            if (literalExpression == null || !AnalyzedSpan.TryCreate(snapshot, literalExpression, out AnalyzedSpan analyzedSpan))
+                return;
+
+            SyntaxSpanList spans = _spanListPool.Get();
+            analyzedSpan.Reparse(snapshot, invocation, literalExpression, ref spans);
+
+            lock (_synchronizationLock)
+            {
+                _analyzedSpans.AddLast(analyzedSpan);
+            }
+        }
+
+        private void ScanExistingGqlExpression(ITextSnapshot snapshot, InvocationExpressionSyntax invocation, LiteralExpressionSyntax literalExpression, LinkedListNode<AnalyzedSpan> existingNode)
+        {
+            SyntaxSpanList spans;
+            AnalyzedSpan existingAnalyzedSpan = existingNode.Value;
+
+            if (!existingAnalyzedSpan.IsUnterminated && literalExpression != null)
+            {
+                spans = _spanListPool.Get();
+                existingAnalyzedSpan.Reparse(snapshot, invocation, literalExpression, ref spans);
+                _spanListPool.Return(spans);
+                return;
+            }
+
+            if (literalExpression == null || !AnalyzedSpan.TryCreate(snapshot, literalExpression, out AnalyzedSpan analyzedSpan))
+            {
+                lock (_synchronizationLock)
+                {
+                    RemoveNode(existingNode);
+                }
+
+                return;
+            }
+
+            spans = _spanListPool.Get();
+            analyzedSpan.Reparse(snapshot, invocation, literalExpression, ref spans);
+
+            lock (_synchronizationLock)
+            {
+                RemoveNode(existingNode);
+                _analyzedSpans.AddLast(analyzedSpan);
+            }
+        }
+
+        private void RemoveNode(LinkedListNode<AnalyzedSpan> existingNode)
+        {
+            _spanListPool.Return(existingNode.Value.ReturnSpanList());
+            _analyzedSpans.Remove(existingNode);
         }
 
         private bool TryGetAt(int expressionSpanStart, out LinkedListNode<AnalyzedSpan> node)

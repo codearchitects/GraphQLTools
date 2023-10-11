@@ -8,17 +8,14 @@ namespace GraphQLTools.Analysis
 {
     internal sealed class VerbatimStringLiteralAnalyzedSpan : AnalyzedSpan
     {
-        private readonly bool _isUnterminated; // It can be true in error cases.
-
         public VerbatimStringLiteralAnalyzedSpan(Microsoft.CodeAnalysis.CSharp.SyntaxKind syntaxKind, bool isUnterminated)
-            : base(syntaxKind)
+            : base(syntaxKind, isUnterminated)
         {
-            _isUnterminated = isUnterminated;
         }
 
         protected override int GqlSpanStart => ExpressionSpanStart + 2;
 
-        protected override int GqlSpanEnd => _isUnterminated
+        protected override int GqlSpanEnd => IsUnterminated
             ? ExpressionSpanEnd
             : ExpressionSpanEnd - 1;
 
