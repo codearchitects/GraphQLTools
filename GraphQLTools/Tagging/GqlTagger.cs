@@ -19,14 +19,14 @@ namespace GraphQLTools.Tagging
         private readonly ITextBuffer2 _buffer;
         private readonly AnalyzedSpanBag _analyzedSpans;
         private readonly GqlTagSpanFactory _tagSpanFactory;
-        private readonly TaggerSemaphore _semaphore;
+        private readonly TaggerCancellationTokenSource _cts;
 
-        public GqlTagger(ITextBuffer2 buffer, ObjectPool<SyntaxSpanList> spanListPool, GqlTagSpanFactory tagSpanFactory)
+        public GqlTagger(ITextBuffer2 buffer, GqlTagSpanFactory tagSpanFactory, ObjectPool<SyntaxSpanList> spanListPool)
         {
             _buffer = buffer;
-            _analyzedSpans = AnalyzedSpanBag.Create(spanListPool);
             _tagSpanFactory = tagSpanFactory;
-            _semaphore = TaggerSemaphore.Create();
+            _analyzedSpans = AnalyzedSpanBag.Create(spanListPool);
+            _cts = TaggerCancellationTokenSource.Create();
 
             buffer.Changed += Buffer_Changed;
             buffer.ChangedOnBackground += Buffer_ChangedOnBackground;
@@ -36,8 +36,7 @@ namespace GraphQLTools.Tagging
 
         public void Close()
         {
-            _semaphore.Clear();
-
+            _cts.Clear();
             _analyzedSpans.Clear();
             
             _buffer.Changed -= Buffer_Changed;
@@ -60,20 +59,13 @@ namespace GraphQLTools.Tagging
             }
             finally
             {
-                _semaphore.Cancel(snapshot);
+                _cts.Cancel(snapshot);
             }
         }
 
         private void Buffer_Changed(object sender, TextContentChangedEventArgs e)
         {
-            if (e.Changes.Count == 0)
-                return;
-
-            _semaphore.NotifyChangesPending();
-            _semaphore.Cancel(e.Before);
-
-            _analyzedSpans.HandleChanges(e.Changes);
-            _semaphore.NotifyChangesHandled();
+            _cts.Cancel(e.Before);
         }
 
         private void Buffer_ChangedOnBackground(object sender, TextContentChangedEventArgs e)
@@ -83,7 +75,11 @@ namespace GraphQLTools.Tagging
 
             ITextSnapshot snapshot = e.After;
             INormalizedTextChangeCollection changes = e.Changes;
-            CancellationToken cancellationToken = _semaphore.GetToken(snapshot);
+            CancellationToken cancellationToken = _cts.GetToken(snapshot);
+
+            _analyzedSpans.Synchronize(changes);
+            if (cancellationToken.IsCancellationRequested)
+                return;
 
             try
             {
@@ -94,22 +90,21 @@ namespace GraphQLTools.Tagging
             }
             finally
             {
-                _semaphore.Cancel(snapshot);
+                _cts.Cancel(snapshot);
             }
         }
 
         private async Task ScanChangesAsync(ITextSnapshot snapshot, INormalizedTextChangeCollection changes, CancellationToken cancellationToken)
         {
+            await Task.Delay(200, cancellationToken); // Debounce to offload the working thread. Not sure if needed.
+
             Document document = snapshot.GetOpenDocumentInCurrentContextWithChanges();
             if (document is null || !document.SupportsSyntaxTree || !document.SupportsSemanticModel)
                 return;
 
-            await Task.Delay(20, cancellationToken); // Debounce
-
             SyntaxNode rootNode = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             SemanticModel semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
-            _semaphore.WaitUntilChangesHandled(TimeSpan.FromSeconds(100));
             if (cancellationToken.IsCancellationRequested)
                 return;
 
@@ -144,6 +139,9 @@ namespace GraphQLTools.Tagging
                     foreach (SyntaxSpan syntaxSpan in analyzedSpan.GetSyntaxSpansIn(snapshotSpan))
                     {
                         Debug.Assert(snapshotSpan.Start <= syntaxSpan.End && syntaxSpan.Start <= snapshotSpan.End);
+                        
+                        if (syntaxSpan.End > snapshot.Length)
+                            continue;
 
                         yield return _tagSpanFactory.CreateTagSpan(snapshot, in syntaxSpan);
                     }
@@ -163,6 +161,9 @@ namespace GraphQLTools.Tagging
                 foreach (AnalyzedSpan analyzedSpan in _analyzedSpans)
                 {
                     if (!analyzedSpan.TryGetDiagnosticSpanIn(snapshotSpan, out DiagnosticSpan diagnosticSpan))
+                        continue;
+
+                    if (diagnosticSpan.End > snapshot.Length)
                         continue;
 
                     yield return _tagSpanFactory.CreateTagSpan(snapshot, in diagnosticSpan);

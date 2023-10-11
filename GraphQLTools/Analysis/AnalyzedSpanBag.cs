@@ -1,7 +1,6 @@
 ﻿using GraphQLTools.Syntax;
 using GraphQLTools.Utils;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.Extensions.ObjectPool;
@@ -47,12 +46,12 @@ namespace GraphQLTools.Analysis
             return new Enumerator(_analyzedSpans, _synchronizationLock, lockTaken);
         }
 
-        public void HandleChanges(INormalizedTextChangeCollection changes)
+        public void Synchronize(INormalizedTextChangeCollection changes)
         {
             if (_analyzedSpans.Count == 0)
                 return;
 
-            lock (_synchronizationLock) // That shouldn't be necessary, but we keep it anyway.
+            lock (_synchronizationLock)
             {
                 LinkedListNode<AnalyzedSpan> node = _analyzedSpans.First;
                 LinkedListNode<AnalyzedSpan> last = node.Previous;
@@ -63,7 +62,7 @@ namespace GraphQLTools.Analysis
                     AnalyzedSpan analyzedSpan = current.Value;
                     node = node.Next;
 
-                    analyzedSpan.HandleChanges(changes);
+                    analyzedSpan.Synchronize(changes);
                     if (analyzedSpan.Length != 0)
                         continue;
 

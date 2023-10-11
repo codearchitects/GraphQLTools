@@ -129,7 +129,7 @@ namespace GraphQLTools.Classification
     {
         public const string Name = "GraphQL - Type name";
         public static readonly Color LightModeColor = Color.FromRgb(202, 152, 0);
-        public static readonly Color DarkModeColor = Color.FromRgb(187, 20, 228);
+        public static readonly Color DarkModeColor = Color.FromRgb(78, 201, 176);
         public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
 
         protected override string NameCore => Name;
@@ -163,7 +163,7 @@ namespace GraphQLTools.Classification
     {
         public const string Name = "GraphQL - Aliased field name";
         public static readonly Color LightModeColor = Color.FromRgb(28, 146, 169);
-        public static readonly Color DarkModeColor = Color.FromRgb(98, 168, 155);
+        public static readonly Color DarkModeColor = Color.FromRgb(96, 170, 137);
         public static Color ThemeAwareColor => GqlClassificationTypes.GetThemeAwareColor(in LightModeColor, in DarkModeColor);
 
         protected override string NameCore => Name;

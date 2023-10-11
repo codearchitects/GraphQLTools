@@ -2,7 +2,6 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using Microsoft.Extensions.ObjectPool;
 using Microsoft.VisualStudio.Text;
 using System.Diagnostics;
 using SourceText = GraphQLTools.Syntax.SourceText;
@@ -81,7 +80,7 @@ namespace GraphQLTools.Analysis
             return result;
         }
 
-        public void HandleChanges(INormalizedTextChangeCollection changes)
+        public void Synchronize(INormalizedTextChangeCollection changes)
         {
             int invocationStart = InvocationSpanStart;
             int invocationEnd = InvocationSpanEnd;
@@ -93,19 +92,24 @@ namespace GraphQLTools.Analysis
                 ITextChange change = changes[i];
                 int changeStart = change.OldPosition;
                 int changeEnd = change.OldEnd;
+                int offset = change.Delta;
 
                 if (invocationEnd <= changeStart) // If the change is after us, take no action.
                     continue;
 
                 if (changeEnd <= invocationStart) // If the change is completely before us, shift the spans' and spans' start positions.
                 {
-                    Shift(change.Delta);
+                    InvocationSpanStart += offset;
+                    ExpressionSpanStart += offset;
+                    _spans.Shift(offset);
                     continue;
                 }
 
                 if (gqlStart <= changeStart && changeEnd <= gqlEnd) // If the change is comprised within the GQL span, adjust the spans' lengths and signal a reparse is needed.
                 {
-                    HandleChangeInGql(change);
+                    InvocationSpanLength += offset;
+                    ExpressionSpanLength += offset;
+                    _spans.Synchronize(change);
                     continue;
                 }
 
@@ -115,58 +119,6 @@ namespace GraphQLTools.Analysis
                 InvocationSpanLength = 0;
                 ExpressionSpanLength = 0;
                 return;
-            }
-        }
-
-        private void Shift(int offset)
-        {
-            InvocationSpanStart += offset;
-            ExpressionSpanStart += offset;
-
-            _spans.Shift(offset);
-        }
-
-        private void HandleChangeInGql(ITextChange change)
-        {
-            InvocationSpanLength += change.Delta;
-            ExpressionSpanLength += change.Delta;
-
-            int changeStart = change.OldPosition;
-            int changeEnd = change.OldEnd;
-
-            for (int i = 0; i < _spans.Count; i++)
-            {
-                SyntaxSpan token = _spans[i];
-                int tokenStart = token.Start;
-                int tokenEnd = token.End;
-
-                if (tokenEnd < changeStart) // If the change is completely after the token, take no action.
-                    continue;
-
-                if (changeEnd <= tokenStart) // If the change is before the token, shift the and token's start positions.
-                {
-                    _spans[i] = token.Shift(change.Delta);
-                    continue;
-                }
-
-                // Otherwise, we adjust the token's span.
-                int newLength;
-
-                if (changeStart <= tokenStart)
-                {
-                    newLength = changeEnd < tokenEnd
-                      ? tokenEnd - changeStart + change.Delta
-                      : 0;
-
-                    _spans[i] = token.WithSpan(changeStart, newLength);
-                    continue;
-                }
-
-                newLength = changeEnd < tokenEnd
-                ? token.Length + change.Delta
-                  : change.NewLength + changeStart - tokenStart;
-
-                _spans[i] = token.WithSpan(tokenStart, newLength);
             }
         }
 

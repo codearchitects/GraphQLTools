@@ -44,7 +44,7 @@ namespace GraphQLTools.Tagging
 
             return (ITagger<T>)buffer.Properties.GetOrCreateSingletonProperty(() =>
             {
-                GqlTagger tagger = new GqlTagger((ITextBuffer2)buffer, _spanListPool, _tagSpanFactory);
+                GqlTagger tagger = new GqlTagger((ITextBuffer2)buffer, _tagSpanFactory, _spanListPool);
                 _openTaggers.Add(textView, tagger);
                 tagger.ScanDocument();
                 return tagger;
