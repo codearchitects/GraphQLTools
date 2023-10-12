@@ -1,9 +1,10 @@
-﻿using Microsoft.VisualStudio.Text;
+﻿using GraphQLTools.Syntax;
+using Microsoft.VisualStudio.Text;
 using System;
 using System.Diagnostics;
 using System.Threading;
 
-namespace GraphQLTools.Syntax
+namespace GraphQLTools.Analysis
 {
     internal readonly struct SyntaxSpanListSlice
     {

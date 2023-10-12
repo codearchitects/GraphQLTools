@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.Utilities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using SyntaxSpanListPool = Microsoft.Extensions.ObjectPool.ObjectPool<GraphQLTools.Syntax.SyntaxSpanList>;
+using SyntaxSpanListPool = Microsoft.Extensions.ObjectPool.ObjectPool<GraphQLTools.Analysis.SyntaxSpanList>;
 
 namespace GraphQLTools.Tagging
 {

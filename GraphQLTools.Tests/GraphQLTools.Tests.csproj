@@ -8,7 +8,7 @@
     <ProjectGuid>{581E005C-932B-44D1-97D4-BD1F4E9A7806}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GraphQLTools.Tests</RootNamespace>
+    <RootNamespace>GraphQLTools</RootNamespace>
     <AssemblyName>GraphQLTools.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -45,6 +45,7 @@
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CodeAnalysis, Version=4.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=17.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.CoreUtility.17.7.188\lib\net472\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
     </Reference>
@@ -105,6 +106,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GraphQLTools.Core\GraphQLTools.Core.csproj">
+      <Project>{b011be80-7b51-4f44-9c9d-ce06f4548572}</Project>
+      <Name>GraphQLTools.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GraphQLTools\GraphQLTools.csproj">
       <Project>{82156af4-fcbc-4902-b6c5-e29d402bf0e4}</Project>
       <Name>GraphQLTools</Name>

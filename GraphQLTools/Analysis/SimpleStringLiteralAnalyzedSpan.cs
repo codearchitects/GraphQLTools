@@ -4,12 +4,13 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.Text;
 using System.Diagnostics;
 using static GraphQLTools.Syntax.TextFacts;
+using SyntaxKind = Microsoft.CodeAnalysis.CSharp.SyntaxKind;
 
 namespace GraphQLTools.Analysis
 {
     internal sealed class SimpleStringLiteralAnalyzedSpan : AnalyzedSpan
     {
-        public SimpleStringLiteralAnalyzedSpan(Microsoft.CodeAnalysis.CSharp.SyntaxKind syntaxKind, bool isUnterminated)
+        public SimpleStringLiteralAnalyzedSpan(SyntaxKind syntaxKind, bool isUnterminated)
             : base(syntaxKind, isUnterminated)
         {
         }
@@ -47,7 +48,7 @@ namespace GraphQLTools.Analysis
             return backslashCount % 2 == 0;
         }
 
-        private sealed class SimpleStringLiteralSourceText : SnapshotSourceText
+        private sealed class SimpleStringLiteralSourceText : SnapshotSourceText // Based on Roslyn's lexer
         {
             private char _surrogateChar;
 

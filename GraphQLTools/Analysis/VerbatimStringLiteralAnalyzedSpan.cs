@@ -3,12 +3,13 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.Text;
 using System.Diagnostics;
+using SyntaxKind = Microsoft.CodeAnalysis.CSharp.SyntaxKind;
 
 namespace GraphQLTools.Analysis
 {
     internal sealed class VerbatimStringLiteralAnalyzedSpan : AnalyzedSpan
     {
-        public VerbatimStringLiteralAnalyzedSpan(Microsoft.CodeAnalysis.CSharp.SyntaxKind syntaxKind, bool isUnterminated)
+        public VerbatimStringLiteralAnalyzedSpan(SyntaxKind syntaxKind, bool isUnterminated)
             : base(syntaxKind, isUnterminated)
         {
         }

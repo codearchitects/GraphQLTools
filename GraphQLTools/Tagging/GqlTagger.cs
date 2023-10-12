@@ -96,8 +96,6 @@ namespace GraphQLTools.Tagging
 
         private async Task ScanChangesAsync(ITextSnapshot snapshot, INormalizedTextChangeCollection changes, CancellationToken cancellationToken)
         {
-            await Task.Delay(200, cancellationToken); // Debounce to offload the working thread. Not sure if needed.
-
             Document document = snapshot.GetOpenDocumentInCurrentContextWithChanges();
             if (document is null || !document.SupportsSyntaxTree || !document.SupportsSemanticModel)
                 return;

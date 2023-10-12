@@ -53,23 +53,10 @@ namespace GraphQLTools.Analysis
 
             lock (_synchronizationLock)
             {
-                LinkedListNode<AnalyzedSpan> node = _analyzedSpans.First;
-                LinkedListNode<AnalyzedSpan> last = node.Previous;
-
-                do
+                foreach (AnalyzedSpan analyzedSpan in _analyzedSpans)
                 {
-                    LinkedListNode<AnalyzedSpan> current = node;
-                    AnalyzedSpan analyzedSpan = current.Value;
-                    node = node.Next;
-
                     analyzedSpan.Synchronize(changes);
-                    if (analyzedSpan.Length != 0)
-                        continue;
-
-                    analyzedSpan.ReturnSpanList();
-                    _analyzedSpans.Remove(current);
                 }
-                while (node != last);
             }
         }
 
@@ -92,19 +79,21 @@ namespace GraphQLTools.Analysis
 
         private void Rescan(ITextSnapshot snapshot, Span span, SyntaxNode rootNode, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
-            IEnumerable<SyntaxNode> nodes = GetNodesToAnalyze(rootNode, span.ToRoslynSpan());
+            RemoveInvalidatedNodes();
+
+            IEnumerable<SyntaxNode> nodes = GetNodesToAnalyze(rootNode, new TextSpan(span.Start, span.Length));
 
             foreach (SyntaxNode node in nodes)
             {
+                if (cancellationToken.IsCancellationRequested)
+                    return;
+
                 InvocationExpressionSyntax invocation = node as InvocationExpressionSyntax;
                 if (invocation is null)
                     continue;
 
                 foreach (ArgumentSyntax argument in invocation.ArgumentList.Arguments)
                 {
-                    if (cancellationToken.IsCancellationRequested)
-                        return;
-
                     if (!semanticModel.IsGqlString(argument))
                         continue;
 
@@ -173,6 +162,30 @@ namespace GraphQLTools.Analysis
         {
             _spanListPool.Return(existingNode.Value.ReturnSpanList());
             _analyzedSpans.Remove(existingNode);
+        }
+
+        private void RemoveInvalidatedNodes()
+        {
+            if (_analyzedSpans.Count == 0)
+                return;
+
+            lock (_synchronizationLock)
+            {
+                LinkedListNode<AnalyzedSpan> node = _analyzedSpans.First;
+                LinkedListNode<AnalyzedSpan> last = node.Previous;
+
+                do
+                {
+                    LinkedListNode<AnalyzedSpan> current = node;
+                    node = node.Next;
+
+                    if (current.Value.Length != 0)
+                        continue;
+
+                    RemoveNode(current);
+                }
+                while (node != last);
+            }
         }
 
         private bool TryGetAt(int expressionSpanStart, out LinkedListNode<AnalyzedSpan> node)

@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.Text;
+using SyntaxKind = Microsoft.CodeAnalysis.CSharp.SyntaxKind;
 
 namespace GraphQLTools.Analysis
 {
@@ -9,7 +10,7 @@ namespace GraphQLTools.Analysis
     {
         private readonly int _quoteCount;
 
-        public RawStringLiteralAnalyzedSpan(Microsoft.CodeAnalysis.CSharp.SyntaxKind syntaxKind, bool isUnterminated, int quoteCount)
+        public RawStringLiteralAnalyzedSpan(SyntaxKind syntaxKind, bool isUnterminated, int quoteCount)
             : base(syntaxKind, isUnterminated)
         {
             _quoteCount = quoteCount;

@@ -1,8 +1,10 @@
-﻿using Microsoft.VisualStudio.Text;
+﻿using GraphQLTools.Syntax;
+using Microsoft.CodeAnalysis.Text;
+using Microsoft.VisualStudio.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace GraphQLTools.Syntax
+namespace GraphQLTools.Analysis
 {
     internal class SyntaxSpanList : ISyntaxSpanCollection
     {
@@ -74,8 +76,8 @@ namespace GraphQLTools.Syntax
                 }
 
                 newLength = changeEnd < tokenEnd
-                ? token.Length + offset
-                  : change.NewLength + changeStart - tokenStart;
+                    ? token.Length + offset
+                    : change.NewLength + changeStart - tokenStart;
 
                 _list[i] = token.WithSpan(tokenStart, newLength);
             }
@@ -95,126 +97,126 @@ namespace GraphQLTools.Syntax
             DiagnosticSpan = null;
         }
 
-        void ISyntaxSpanCollection.AddPunctuator(Span span)
+        void ISyntaxSpanCollection.AddPunctuator(TextSpan span)
         {
             VerifyAtEnd(span);
 
             _list.Add(SyntaxSpan.Create(SyntaxKind.Punctuator, span));
         }
 
-        void ISyntaxSpanCollection.AddOperationName(Span span)
+        void ISyntaxSpanCollection.AddOperationName(TextSpan span)
         {
             VerifyAtEnd(span);
 
             _list.Add(SyntaxSpan.Create(SyntaxKind.OperationName, span));
         }
 
-        void ISyntaxSpanCollection.AddFragmentName(Span span)
+        void ISyntaxSpanCollection.AddFragmentName(TextSpan span)
         {
             VerifyAtEnd(span);
 
             _list.Add(SyntaxSpan.Create(SyntaxKind.FragmentName, span));
         }
 
-        void ISyntaxSpanCollection.AddKeyword(Span span)
+        void ISyntaxSpanCollection.AddKeyword(TextSpan span)
         {
             VerifyAtEnd(span);
 
             _list.Add(SyntaxSpan.Create(SyntaxKind.Keyword, span));
         }
 
-        void ISyntaxSpanCollection.AddVariableName(Span span)
+        void ISyntaxSpanCollection.AddVariableName(TextSpan span)
         {
             VerifyAtEnd(span);
 
             _list.Add(SyntaxSpan.Create(SyntaxKind.VariableName, span));
         }
 
-        void ISyntaxSpanCollection.AddDirectiveName(Span span)
+        void ISyntaxSpanCollection.AddDirectiveName(TextSpan span)
         {
             VerifyAtEnd(span);
 
             _list.Add(SyntaxSpan.Create(SyntaxKind.DirectiveName, span));
         }
 
-        void ISyntaxSpanCollection.AddTypeName(Span span)
+        void ISyntaxSpanCollection.AddTypeName(TextSpan span)
         {
             VerifyAtEnd(span);
 
             _list.Add(SyntaxSpan.Create(SyntaxKind.TypeName, span));
         }
 
-        void ISyntaxSpanCollection.AddFieldName(Span span)
+        void ISyntaxSpanCollection.AddFieldName(TextSpan span)
         {
             VerifyAtEnd(span);
 
             _list.Add(SyntaxSpan.Create(SyntaxKind.FieldName, span));
         }
 
-        void ISyntaxSpanCollection.AddAliasedFieldName(Span span)
+        void ISyntaxSpanCollection.AddAliasedFieldName(TextSpan span)
         {
             VerifyAtEnd(span);
 
             _list.Add(SyntaxSpan.Create(SyntaxKind.AliasedFieldName, span));
         }
 
-        void ISyntaxSpanCollection.AddArgumentName(Span span)
+        void ISyntaxSpanCollection.AddArgumentName(TextSpan span)
         {
             VerifyAtEnd(span);
 
             _list.Add(SyntaxSpan.Create(SyntaxKind.ArgumentName, span));
         }
 
-        void ISyntaxSpanCollection.AddObjectFieldName(Span span)
+        void ISyntaxSpanCollection.AddObjectFieldName(TextSpan span)
         {
             VerifyAtEnd(span);
 
             _list.Add(SyntaxSpan.Create(SyntaxKind.ObjectFieldName, span));
         }
 
-        void ISyntaxSpanCollection.AddString(Span span)
+        void ISyntaxSpanCollection.AddString(TextSpan span)
         {
             VerifyAtEnd(span);
 
             _list.Add(SyntaxSpan.Create(SyntaxKind.String, span));
         }
 
-        void ISyntaxSpanCollection.AddNumber(Span span)
+        void ISyntaxSpanCollection.AddNumber(TextSpan span)
         {
             VerifyAtEnd(span);
 
             _list.Add(SyntaxSpan.Create(SyntaxKind.Number, span));
         }
 
-        void ISyntaxSpanCollection.AddEnum(Span span)
+        void ISyntaxSpanCollection.AddEnum(TextSpan span)
         {
             VerifyAtEnd(span);
 
             _list.Add(SyntaxSpan.Create(SyntaxKind.Enum, span));
         }
 
-        void ISyntaxSpanCollection.AddName(Span span)
+        void ISyntaxSpanCollection.AddName(TextSpan span)
         {
             VerifyAtEnd(span);
 
             _list.Add(SyntaxSpan.Create(SyntaxKind.Name, span));
         }
 
-        void ISyntaxSpanCollection.AddComment(Span span)
+        void ISyntaxSpanCollection.AddComment(TextSpan span)
         {
             VerifyAtEnd(span);
 
             _list.Add(SyntaxSpan.Create(SyntaxKind.Comment, span));
         }
 
-        void ISyntaxSpanCollection.AddError(Span span)
+        void ISyntaxSpanCollection.AddError(TextSpan span)
         {
             VerifyAtEnd(span);
 
             _list.Add(SyntaxSpan.Create(SyntaxKind.Error, span));
         }
 
-        void ISyntaxSpanCollection.SetDiagnostic(Span span, string message)
+        void ISyntaxSpanCollection.SetDiagnostic(TextSpan span, string message)
         {
             Debug.Assert(DiagnosticSpan == null);
 
@@ -222,7 +224,7 @@ namespace GraphQLTools.Syntax
         }
 
         [Conditional("DEBUG")]
-        private void VerifyAtEnd(Span span)
+        private void VerifyAtEnd(TextSpan span)
         {
             Debug.Assert(_list.Count == 0 || span.Start >= _list[_list.Count - 1].End, "Attempted to add a tagged span in the wrong order.");
         }

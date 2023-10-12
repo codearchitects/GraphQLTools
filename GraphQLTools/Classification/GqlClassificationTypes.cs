@@ -17,10 +17,6 @@ namespace GraphQLTools.Classification
             s_isDarkMode = IsDarkMode();
         }
 
-        public static ref readonly Color GetThemeAwareColor(in Color lightModeColor, in Color darkModeColor) => ref s_isDarkMode ? ref darkModeColor : ref lightModeColor;
-
-        private static bool IsDarkMode() => VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey).GetBrightness() < 0.5;
-
         private readonly IClassificationFormatMapService _formatMap;
         private readonly IClassificationTypeRegistryService _typeRegistry;
 
@@ -121,5 +117,9 @@ namespace GraphQLTools.Classification
         {
             VSColorTheme.ThemeChanged -= VSColorTheme_ThemeChanged;
         }
+
+        public static ref readonly Color GetThemeAwareColor(in Color lightModeColor, in Color darkModeColor) => ref s_isDarkMode ? ref darkModeColor : ref lightModeColor;
+
+        private static bool IsDarkMode() => VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey).GetBrightness() < 0.5;
     }
 }
