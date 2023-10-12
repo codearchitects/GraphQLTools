@@ -1,6 +1,6 @@
 ﻿namespace GraphQLTools.Syntax;
 
-internal enum SyntaxKind // Not really representing syntax constructs, but whatever.
+internal enum SyntaxKind // Not really representing syntax, but whatever.
 {
     Punctuator,
     Keyword,

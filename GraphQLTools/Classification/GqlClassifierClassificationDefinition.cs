@@ -4,9 +4,6 @@ using System.ComponentModel.Composition;
 
 namespace GraphQLTools.Classification
 {
-    /// <summary>
-    /// Classification type definition export for GqlClassifier
-    /// </summary>
     internal static class GqlClassifierClassificationDefinition
     {
         [Export(typeof(ClassificationTypeDefinition))]

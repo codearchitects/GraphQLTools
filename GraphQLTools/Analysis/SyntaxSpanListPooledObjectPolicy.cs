@@ -1,5 +1,4 @@
-﻿using GraphQLTools.Syntax;
-using Microsoft.Extensions.ObjectPool;
+﻿using Microsoft.Extensions.ObjectPool;
 
 namespace GraphQLTools.Analysis
 {

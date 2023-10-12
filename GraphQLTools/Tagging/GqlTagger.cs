@@ -38,7 +38,7 @@ namespace GraphQLTools.Tagging
         {
             _cts.Clear();
             _analyzedSpans.Clear();
-            
+
             _buffer.Changed -= Buffer_Changed;
             _buffer.ChangedOnBackground -= Buffer_ChangedOnBackground;
         }
@@ -137,7 +137,7 @@ namespace GraphQLTools.Tagging
                     foreach (SyntaxSpan syntaxSpan in analyzedSpan.GetSyntaxSpansIn(snapshotSpan))
                     {
                         Debug.Assert(snapshotSpan.Start <= syntaxSpan.End && syntaxSpan.Start <= snapshotSpan.End);
-                        
+
                         if (syntaxSpan.End > snapshot.Length)
                             continue;
 

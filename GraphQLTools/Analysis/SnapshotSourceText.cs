@@ -17,7 +17,7 @@ namespace GraphQLTools.Analysis
         protected ITextSnapshot Snapshot { get; }
 
         protected override int Start { get; }
-        
+
         protected override int End { get; }
 
         protected abstract char MoveNextCore(ref int position);
