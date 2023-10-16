@@ -30,4 +30,4 @@ In addition to syntax highlighting, the extension helps identifies syntax errors
 
 Like in the native feature, regular, verbatim and raw string literals are supported, while interpolated strings are not.
 
-Currently, it works only when the attribute is used on parameters. However, we are planning to extend support for properties and fields in the near future. It's worth noting that the `StringSyntax` attribute allows flexibility in the casing of the `syntax` parameter within the attribute's constructor. For example, both `[StringSyntax("GraphQL")]` and `[StringSyntax("graphql")]` are considered valid.
+Currently, it works only when the attribute is used on parameters. However, we are planning to extend support for properties and fields in the near future. It's worth noting that the `StringSyntax` attribute allows flexibility in the casing of the `syntax` parameter within the attribute's constructor. For example, both `[StringSyntax("GraphQL")]` and `[StringSyntax("graphql")]` are valid.
