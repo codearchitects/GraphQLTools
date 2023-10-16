@@ -5,8 +5,8 @@
         <DisplayName>GraphQLTools</DisplayName>
         <Description xml:space="preserve">GraphQL syntax highlighting support for StringSyntaxAttribute.</Description>
         <License>LICENSE.txt</License>
-        <Icon>Resources\icon.png</Icon>
-        <PreviewImage>Resources\preview-image.png</PreviewImage>
+        <Icon>Resources\logo.png</Icon>
+        <PreviewImage>Resources\logo.png</PreviewImage>
         <Tags>graphql syntax highlighting stringsyntaxattribute</Tags>
         <Preview>true</Preview>
     </Metadata>

@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json.schemastore.org/vsix-publish",
+    "categories": [
+        "build",
+        "coding"
+    ],
+    "identity": {
+        "internalName": "GraphQLTools"
+    },
+    "overview": "README.md",
+    "priceCategory": "free",
+    "publisher": "codearchitects",
+    "private": false,
+    "qna": true,
+    "assetFiles": [
+        {
+            "pathOnDisk": ".\\images\\syntax-highlighting.png",
+            "targetPath": "images/syntax-highlighting.png"
+        }
+    ],
+    "repo": "https://github.com/codearchitects/GraphQLTools"
+}
