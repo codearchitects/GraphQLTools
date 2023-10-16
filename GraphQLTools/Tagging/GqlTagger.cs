@@ -129,11 +129,11 @@ namespace GraphQLTools.Tagging
             {
                 ITextSnapshot snapshot = snapshotSpan.Snapshot;
 
-                if (_buffer.CurrentSnapshot != snapshot)
-                    yield break;
-
                 foreach (AnalyzedSpan analyzedSpan in _analyzedSpans)
                 {
+                    if (_buffer.CurrentSnapshot != snapshot)
+                        yield break;
+                    
                     foreach (SyntaxSpan syntaxSpan in analyzedSpan.GetSyntaxSpansIn(snapshotSpan))
                     {
                         Debug.Assert(snapshotSpan.Start <= syntaxSpan.End && syntaxSpan.Start <= snapshotSpan.End);
@@ -153,11 +153,11 @@ namespace GraphQLTools.Tagging
             {
                 ITextSnapshot snapshot = snapshotSpan.Snapshot;
 
-                if (_buffer.CurrentSnapshot != snapshot)
-                    yield break;
-
                 foreach (AnalyzedSpan analyzedSpan in _analyzedSpans)
                 {
+                    if (_buffer.CurrentSnapshot != snapshot)
+                        yield break;
+                    
                     if (!analyzedSpan.TryGetDiagnosticSpanIn(snapshotSpan, out DiagnosticSpan diagnosticSpan))
                         continue;
 
