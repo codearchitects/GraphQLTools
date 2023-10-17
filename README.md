@@ -26,8 +26,8 @@ GraphQLTools enhances the coding experience by classifying various components of
 - Enums
 - Comments
 
-In addition to syntax highlighting, the extension helps identifies syntax errors with diagnostic error messages displayed in tooltips upon mouse hover.
+At this time, only executable definitions (operations and fragments) are supported by the parser, whereas type system definitions and extensions are not. In addition to syntax highlighting, the extension helps identify syntax errors with diagnostic error messages displayed in tooltips upon mouse hover.
 
-Like in the native feature, regular, verbatim and raw string literals are supported, while interpolated strings are not.
+Like in the native feature, regular, verbatim, and raw string literals are supported, while interpolated strings are not.
 
 Currently, it works only when the attribute is used on parameters. However, we are planning to extend support for properties and fields in the near future. It's worth noting that the `StringSyntax` attribute allows flexibility in the casing of the `syntax` parameter within the attribute's constructor. For example, both `[StringSyntax("GraphQL")]` and `[StringSyntax("graphql")]` are valid.
