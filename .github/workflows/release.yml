@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  release:
+    branches:
+      - main
+    tags:
+      - '*'
+    types:
+      - published
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.2.0
+        
+      - name: Restore Packages
+        run: nuget restore GraphQLTools.sln
+
+      - name: Build Project
+        run: msbuild.exe ./GraphQLTools/GraphQLTools.csproj /p:configuration="Release"
+      
+      - name: Publish extension to Marketplace
+        uses: cezarypiatek/VsixPublisherAction@1.0
+        with:
+            extension-file: ./GraphQLTools/bin/Release/GraphQLTools.vsix
+            publish-manifest-file: ./publishManifest.json
+            personal-access-code: ${{ secrets.MARKETPLACE_PAT }}
