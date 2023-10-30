@@ -1,6 +1,6 @@
 # GraphQLTools
 
-GraphQLTools is a Visual Studio 2022 extension designed to provide GraphQL support for the `StringSyntaxAttribute` [feature]([http](https://github.com/dotnet/runtime/issues/62505)) introduced in .NET 7.
+GraphQLTools is a Visual Studio 2022 extension designed to provide GraphQL support for the `StringSyntaxAttribute` [feature](https://github.com/dotnet/runtime/issues/62505) introduced in .NET 7.
 
 Currently, there is no native support for GraphQL formatting and syntax highlighting, so that's where GraphQLTools comes in. By decorating your string parameters with `[StringSyntax("GraphQL")]` you can incorporate GraphQL syntax highlighting and checking into your C# code.
 
