@@ -3,7 +3,7 @@
     <Metadata>
         <Identity Id="GraphQLTools.56dc8242-f2d8-4fa5-ae5f-f531d2b3147d" Version="0.2" Language="en-US" Publisher="Code Architects Research" />
         <DisplayName>GraphQLTools</DisplayName>
-        <Description xml:space="preserve">GraphQL syntax highlighting support for StringSyntaxAttribute.</Description>
+        <Description xml:space="preserve">GraphQL syntax highlighting support for StringSyntaxAttribute. To enable it, decorate your parameters or members with [StringSyntax("GraphQL")].</Description>
         <License>LICENSE.txt</License>
         <Icon>Resources\logo.png</Icon>
         <PreviewImage>Resources\logo.png</PreviewImage>
