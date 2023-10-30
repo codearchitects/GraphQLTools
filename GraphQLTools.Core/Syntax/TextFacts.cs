@@ -5,38 +5,41 @@ namespace GraphQLTools.Syntax;
 internal static class TextFacts
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsAlpha(char c) => c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '_';
+    public static bool IsAlpha(char c) => c is
+        >= 'a' and <= 'z' or
+        >= 'A' and <= 'Z' or
+        '_';
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsDigit(char c) => c >= '0' && c <= '9';
+    public static bool IsDigit(char c) => c is >= '0' and <= '9';
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsAlphaNumeric(char c) => IsAlpha(c) || IsDigit(c);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsIgnored(char c) => c == ' ' || c == '\t' || c == ',' || IsNewlineCharacter(c);
+    public static bool IsIgnored(char c) => c is ' ' or '\t' or ',' || IsNewlineCharacter(c);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsNewlineCharacter(char c) => c == '\n' || c == '\r';
+    public static bool IsNewlineCharacter(char c) => c is '\n' or '\r';
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsExponentIndicator(char c) => c == 'e' || c == 'E';
+    public static bool IsExponentIndicator(char c) => c is 'e' or 'E';
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsSign(char c) => c == '+' || c == '-';
+    public static bool IsSign(char c) => c is '+' or '-';
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsWordLike(char c) => IsAlphaNumeric(c) || IsSign(c) || c is '.';
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsEscaped(char c) => c == '"' || c == '\\' || c == '/' || c == 'b' || c == 'f' || c == 'n' || c == 'r' || c == 't';
+    public static bool IsEscaped(char c) => c is '"' or '\\' or '/' or 'b' or 'f' or 'n' or 'r' or 't';
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsHexDigit(char c)
     {
-        return
-          (c >= '0' && c <= '9') ||
-          (c >= 'A' && c <= 'F') ||
-          (c >= 'a' && c <= 'f');
+        return c is
+            >= '0' and <= '9' or
+            >= 'A' and <= 'F' or
+            >= 'a' and <= 'f';
     }
 }

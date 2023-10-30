@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="GraphQLTools.56dc8242-f2d8-4fa5-ae5f-f531d2b3147d" Version="0.1" Language="en-US" Publisher="Code Architects Research" />
+        <Identity Id="GraphQLTools.56dc8242-f2d8-4fa5-ae5f-f531d2b3147d" Version="0.2" Language="en-US" Publisher="Code Architects Research" />
         <DisplayName>GraphQLTools</DisplayName>
         <Description xml:space="preserve">GraphQL syntax highlighting support for StringSyntaxAttribute.</Description>
         <License>LICENSE.txt</License>
