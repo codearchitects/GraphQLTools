@@ -17,7 +17,7 @@ namespace GraphQLTools.Analysis
         {
             SyntaxKind = syntaxKind;
             IsUnterminated = isUnterminated;
-            InvocationSpanStart = -1;
+            ParentSpanStart = -1;
             ExpressionSpanStart = -1;
         }
 
@@ -31,11 +31,11 @@ namespace GraphQLTools.Analysis
 
         public int End => ExpressionSpanEnd;
 
-        protected int InvocationSpanStart { get; private set; }
+        protected int ParentSpanStart { get; private set; }
 
-        protected int InvocationSpanLength { get; private set; }
+        protected int ParentSpanLength { get; private set; }
 
-        protected int InvocationSpanEnd => InvocationSpanStart + InvocationSpanLength;
+        protected int ParentSpanEnd => ParentSpanStart + ParentSpanLength;
 
         protected int ExpressionSpanStart { get; private set; }
 
@@ -49,13 +49,13 @@ namespace GraphQLTools.Analysis
 
         protected abstract SourceText CreateSource(ITextSnapshot snapshot);
 
-        public void Reparse(ITextSnapshot snapshot, InvocationExpressionSyntax invocation, LiteralExpressionSyntax expression, ref SyntaxSpanList spans)
+        public void Reparse(ITextSnapshot snapshot, CSharpSyntaxNode parent, LiteralExpressionSyntax expression, ref SyntaxSpanList spans)
         {
-            TextSpan invocationSpan = invocation.Span;
+            TextSpan parentSpan = parent.Span;
             TextSpan expressionSpan = expression.Span;
 
-            InvocationSpanStart = invocationSpan.Start;
-            InvocationSpanLength = invocationSpan.Length;
+            ParentSpanStart = parentSpan.Start;
+            ParentSpanLength = parentSpan.Length;
             ExpressionSpanStart = expressionSpan.Start;
             ExpressionSpanLength = expressionSpan.Length;
 
@@ -85,8 +85,8 @@ namespace GraphQLTools.Analysis
 
         public void Synchronize(INormalizedTextChangeCollection changes)
         {
-            int invocationStart = InvocationSpanStart;
-            int invocationEnd = InvocationSpanEnd;
+            int parentStart = ParentSpanStart;
+            int parentEnd = ParentSpanEnd;
             int gqlStart = GqlSpanStart;
             int gqlEnd = GqlSpanEnd;
 
@@ -97,12 +97,12 @@ namespace GraphQLTools.Analysis
                 int changeEnd = change.OldEnd;
                 int offset = change.Delta;
 
-                if (invocationEnd <= changeStart) // If the change is after us, take no action.
+                if (parentEnd <= changeStart) // If the change is after us, take no action.
                     continue;
 
-                if (changeEnd <= invocationStart) // If the change is completely before us, shift the spans' and spans' start positions.
+                if (changeEnd <= parentStart) // If the change is completely before us, shift the spans' and spans' start positions.
                 {
-                    InvocationSpanStart += offset;
+                    ParentSpanStart += offset;
                     ExpressionSpanStart += offset;
                     _spans.Shift(offset);
                     continue;
@@ -110,16 +110,16 @@ namespace GraphQLTools.Analysis
 
                 if (gqlStart <= changeStart && changeEnd <= gqlEnd) // If the change is comprised within the GQL span, adjust the spans' lengths and signal a reparse is needed.
                 {
-                    InvocationSpanLength += offset;
+                    ParentSpanLength += offset;
                     ExpressionSpanLength += offset;
                     _spans.Synchronize(change);
                     continue;
                 }
 
                 // Otherwise, the analyzed span must be invalidated.
-                InvocationSpanStart = -1;
+                ParentSpanStart = -1;
                 ExpressionSpanStart = -1;
-                InvocationSpanLength = 0;
+                ParentSpanLength = 0;
                 ExpressionSpanLength = 0;
                 return;
             }

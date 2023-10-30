@@ -23,7 +23,7 @@ internal static class ErrorMessages
     public const string ExpectedVariableDefinition = s_prefix + "Expected variable definition.";
     public const string ExpectedFragmentName       = s_prefix + "Expected fragment name.";
     public const string ExpectedTypeCondition      = s_prefix + "Expected type condition.";
-    public const string AnonymousOperationError    = s_prefix + "An anonymous operation must be the only defined operation";
+    public const string AnonymousOperationError    = s_prefix + "An anonymous operation must be the only defined operation.";
 
     public static string UnexpectedCharacter(char c)
     {

@@ -7,60 +7,83 @@ namespace GraphQLTools.Utils;
 
 internal static class RoslynExtensions
 {
-    public static bool IsGqlString(this SemanticModel semanticModel, ArgumentSyntax argument)
+    public static bool IsGqlString(this SemanticModel semanticModel, ArgumentSyntax argument, CancellationToken cancellationToken)
     {
-        IOperation? operation = semanticModel.GetOperation(argument);
-        if (operation is IArgumentOperation argumentOperation && argumentOperation.Parameter is IParameterSymbol parameter && parameter.Type.SpecialType is SpecialType.System_String)
+        IOperation? operation = semanticModel.GetOperation(argument, cancellationToken);
+        if (operation is not IArgumentOperation { Parameter: { Type.SpecialType: SpecialType.System_String } parameter })
+            return false;
+
+        return parameter.IsGqlString();
+    }
+
+    public static bool IsGqlString(this SemanticModel semanticModel, VariableDeclaratorSyntax variableDeclarator, CancellationToken cancellationToken)
+    {
+        ISymbol? declaredSymbol = semanticModel.GetDeclaredSymbol(variableDeclarator, cancellationToken);
+        if (declaredSymbol is not IFieldSymbol)
+            return false;
+
+        return declaredSymbol.IsGqlString();
+    }
+
+    public static bool IsGqlString(this SemanticModel semanticModel, PropertyDeclarationSyntax propertyDeclaration, CancellationToken cancellationToken)
+    {
+        ISymbol? declaredSymbol = semanticModel.GetDeclaredSymbol(propertyDeclaration, cancellationToken);
+        if (declaredSymbol is not IPropertySymbol)
+            return false;
+
+        return declaredSymbol.IsGqlString();
+    }
+
+    private static bool IsGqlString(this ISymbol symbol)
+    {
+        ImmutableArray<AttributeData> attributes = symbol.GetAttributes();
+        foreach (AttributeData attribute in attributes)
         {
-            ImmutableArray<AttributeData> parameterAttributes = parameter.GetAttributes();
-            foreach (AttributeData attribute in parameterAttributes)
-            {
-                INamedTypeSymbol? attributeClass = attribute.AttributeClass;
-                if (attributeClass is null)
-                    continue;
+            INamedTypeSymbol? attributeClass = attribute.AttributeClass;
+            if (attributeClass is null)
+                continue;
 
-                if (attributeClass.Name is not "StringSyntaxAttribute")
-                    continue;
+            if (attributeClass.Name != "StringSyntaxAttribute")
+                continue;
 
-                INamespaceSymbol @namespace = attributeClass.ContainingNamespace;
-                if (@namespace is null)
-                    continue;
+            INamespaceSymbol @namespace = attributeClass.ContainingNamespace;
+            if (@namespace is null)
+                continue;
 
-                if (@namespace.Name is not "CodeAnalysis")
-                    continue;
+            if (@namespace.Name != "CodeAnalysis")
+                continue;
 
-                @namespace = @namespace.ContainingNamespace;
-                if (@namespace is null)
-                    continue;
+            @namespace = @namespace.ContainingNamespace;
+            if (@namespace is null)
+                continue;
 
-                if (@namespace.Name is not "Diagnostics")
-                    continue;
+            if (@namespace.Name != "Diagnostics")
+                continue;
 
-                @namespace = @namespace.ContainingNamespace;
-                if (@namespace is null)
-                    continue;
+            @namespace = @namespace.ContainingNamespace;
+            if (@namespace is null)
+                continue;
 
-                if (@namespace.Name is not "System")
-                    continue;
+            if (@namespace.Name != "System")
+                continue;
 
-                @namespace = @namespace.ContainingNamespace;
-                if (@namespace is null)
-                    continue;
+            @namespace = @namespace.ContainingNamespace;
+            if (@namespace is null)
+                continue;
 
-                if (!@namespace.IsGlobalNamespace)
-                    continue;
+            if (!@namespace.IsGlobalNamespace)
+                continue;
 
-                ImmutableArray<TypedConstant> constructorArguments = attribute.ConstructorArguments;
-                if (constructorArguments.Length == 0)
-                    continue;
+            ImmutableArray<TypedConstant> constructorArguments = attribute.ConstructorArguments;
+            if (constructorArguments.Length == 0)
+                continue;
 
-                TypedConstant constructorArgument = constructorArguments[0];
-                if (constructorArgument.Type is null || constructorArgument.Type.SpecialType is not SpecialType.System_String)
-                    continue;
+            TypedConstant constructorArgument = constructorArguments[0];
+            if (constructorArgument.Type is not { SpecialType: SpecialType.System_String })
+                continue;
 
-                if (constructorArgument.Value is string value && value.Equals("graphql", StringComparison.InvariantCultureIgnoreCase))
-                    return true;
-            }
+            if (constructorArgument.Value is string value && value.Equals("graphql", StringComparison.InvariantCultureIgnoreCase))
+                return true;
         }
 
         return false;

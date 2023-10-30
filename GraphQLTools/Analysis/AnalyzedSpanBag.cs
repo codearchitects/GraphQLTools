@@ -1,5 +1,6 @@
 ﻿using GraphQLTools.Utils;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.Extensions.ObjectPool;
@@ -87,28 +88,57 @@ namespace GraphQLTools.Analysis
                 if (cancellationToken.IsCancellationRequested)
                     return;
 
-                InvocationExpressionSyntax invocation = node as InvocationExpressionSyntax;
-                if (invocation is null)
-                    continue;
-
-                foreach (ArgumentSyntax argument in invocation.ArgumentList.Arguments)
+                switch (node)
                 {
-                    if (!semanticModel.IsGqlString(argument))
-                        continue;
+                    case InvocationExpressionSyntax invocationExpression:
+                        foreach (ArgumentSyntax argument in invocationExpression.ArgumentList.Arguments)
+                        {
+                            if (!semanticModel.IsGqlString(argument, cancellationToken))
+                                continue;
 
-                    ScanGqlExpression(snapshot, invocation, argument.Expression);
+                            ScanGqlExpression(snapshot, invocationExpression, argument.Expression);
+                        }
+                        break;
+
+                    case FieldDeclarationSyntax fieldDeclaration:
+                        if (fieldDeclaration.Declaration is null)
+                            break;
+
+                        foreach (VariableDeclaratorSyntax variableDeclarator in fieldDeclaration.Declaration.Variables)
+                        {
+                            ExpressionSyntax fieldDeclaratorExpression = variableDeclarator.Initializer.Value;
+                            if (fieldDeclaratorExpression is null)
+                                continue;
+
+                            if (!semanticModel.IsGqlString(variableDeclarator, cancellationToken))
+                                continue;
+
+                            ScanGqlExpression(snapshot, fieldDeclaration, fieldDeclaratorExpression);
+                        }
+                        break;
+
+                    case PropertyDeclarationSyntax propertyDeclaration:
+                        ExpressionSyntax propertyExpression = propertyDeclaration.ExpressionBody?.Expression ?? propertyDeclaration.Initializer?.Value;
+                        if (propertyExpression is null)
+                            break;
+
+                        if (!semanticModel.IsGqlString(propertyDeclaration, cancellationToken))
+                            break;
+
+                        ScanGqlExpression(snapshot, propertyDeclaration, propertyExpression);
+                        break;
                 }
             }
         }
 
-        private void ScanGqlExpression(ITextSnapshot snapshot, InvocationExpressionSyntax invocation, ExpressionSyntax expression)
+        private void ScanGqlExpression(ITextSnapshot snapshot, CSharpSyntaxNode parent, ExpressionSyntax expression)
         {
             int expressionSpanStart = expression.SpanStart;
             LiteralExpressionSyntax literalExpression = expression as LiteralExpressionSyntax;
 
             if (TryGetAt(expressionSpanStart, out LinkedListNode<AnalyzedSpan> existingNode))
             {
-                ScanExistingGqlExpression(snapshot, invocation, literalExpression, existingNode);
+                ScanExistingGqlExpression(snapshot, parent, literalExpression, existingNode);
                 return;
             }
 
@@ -116,7 +146,7 @@ namespace GraphQLTools.Analysis
                 return;
 
             SyntaxSpanList spans = _spanListPool.Get();
-            analyzedSpan.Reparse(snapshot, invocation, literalExpression, ref spans);
+            analyzedSpan.Reparse(snapshot, parent, literalExpression, ref spans);
 
             lock (_synchronizationLock)
             {
@@ -124,15 +154,15 @@ namespace GraphQLTools.Analysis
             }
         }
 
-        private void ScanExistingGqlExpression(ITextSnapshot snapshot, InvocationExpressionSyntax invocation, LiteralExpressionSyntax literalExpression, LinkedListNode<AnalyzedSpan> existingNode)
+        private void ScanExistingGqlExpression(ITextSnapshot snapshot, CSharpSyntaxNode parent, LiteralExpressionSyntax literalExpression, LinkedListNode<AnalyzedSpan> existingNode)
         {
             SyntaxSpanList spans;
             AnalyzedSpan existingAnalyzedSpan = existingNode.Value;
 
-            if (!existingAnalyzedSpan.IsUnterminated && literalExpression != null)
+            if (!existingAnalyzedSpan.IsUnterminated && literalExpression != null && literalExpression.Token.IsKind(existingAnalyzedSpan.SyntaxKind))
             {
                 spans = _spanListPool.Get();
-                existingAnalyzedSpan.Reparse(snapshot, invocation, literalExpression, ref spans);
+                existingAnalyzedSpan.Reparse(snapshot, parent, literalExpression, ref spans);
                 _spanListPool.Return(spans);
                 return;
             }
@@ -148,7 +178,7 @@ namespace GraphQLTools.Analysis
             }
 
             spans = _spanListPool.Get();
-            analyzedSpan.Reparse(snapshot, invocation, literalExpression, ref spans);
+            analyzedSpan.Reparse(snapshot, parent, literalExpression, ref spans);
 
             lock (_synchronizationLock)
             {

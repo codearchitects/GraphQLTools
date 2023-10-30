@@ -68,76 +68,33 @@ internal ref struct GqlLexer
         if (IsAlpha(current))
             return Name();
 
-        if (current == '{')
-            return Token(TokenKind.LeftBrace);
-
-        if (current == '}')
-            return Token(TokenKind.RightBrace);
-
-        if (current == '"')
-            return _source.Eat("\"\"") ? BlockString() : String();
-
-        if (current == ' ' || current == '\t' || current == '\n' || current == '\r')
-            return Ignored();
-
-        if (current == ',')
-            return Token(TokenKind.Comma);
-
-        if (current >= '1' && current <= '9')
-            return NonZeroDigit();
-
-        if (current == '-')
-            return MinusSign();
-
-        if (current == '0')
-            return Zero();
-
-        if (current == '(')
-            return Token(TokenKind.LeftParenthesis);
-
-        if (current == ')')
-            return Token(TokenKind.RightParenthesis);
-
-        if (current == '[')
-            return Token(TokenKind.LeftBracket);
-
-        if (current == ']')
-            return Token(TokenKind.RightBracket);
-
-        if (current == ':')
-            return Token(TokenKind.Colon);
-
-        if (current == '=')
-            return Token(TokenKind.Equals);
-
-        if (current == '$')
-            return VariableName();
-
-        if (current == '@')
-            return DirectiveName();
-
-        if (current == '.' && _source.Eat(".."))
-            return Token(TokenKind.Spread);
-
-        if (current == '|')
-            return Token(TokenKind.Pipe);
-
-        if (current == '!')
-            return Token(TokenKind.Bang);
-
-        if (current == '?')
-            return Token(TokenKind.QuestionMark);
-
-        if (current == '&')
-            return Token(TokenKind.Ampersand);
-
-        if (current == '#')
-            return Comment();
-
-        if (current == SourceText.InvalidChar)
-            return Token(TokenKind.BadSource);
-
-        return Unexpected(current);
+        return current switch
+        {
+            '{'                         => Token(TokenKind.LeftBrace),
+            '}'                         => Token(TokenKind.RightBrace),
+            '"'                         => _source.Eat("\"\"") ? BlockString() : String(),
+            ' ' or '\t' or '\n' or '\r' => Ignored(),
+            ','                         => Token(TokenKind.Comma),
+            >= '1' and <= '9'           => NonZeroDigit(),
+            '-'                         => MinusSign(),
+            '0'                         => Zero(),
+            '('                         => Token(TokenKind.LeftParenthesis),
+            ')'                         => Token(TokenKind.RightParenthesis),
+            '['                         => Token(TokenKind.LeftBracket),
+            ']'                         => Token(TokenKind.RightBracket),
+            ':'                         => Token(TokenKind.Colon),
+            '='                         => Token(TokenKind.Equals),
+            '$'                         => VariableName(),
+            '@'                         => DirectiveName(),
+            '.' when _source.Eat("..")  => Token(TokenKind.Spread),
+            '|'                         => Token(TokenKind.Pipe),
+            '!'                         => Token(TokenKind.Bang),
+            '?'                         => Token(TokenKind.QuestionMark),
+            '&'                         => Token(TokenKind.Ampersand),
+            '#'                         => Comment(),
+            SourceText.InvalidChar      => Token(TokenKind.BadSource),
+            _                           => Unexpected(current)
+        };
     }
 
     private bool Name()
