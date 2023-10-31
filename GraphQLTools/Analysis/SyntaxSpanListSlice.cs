@@ -19,11 +19,11 @@ namespace GraphQLTools.Analysis
 
         public Enumerator GetEnumerator()
         {
-            bool lockTaken = false;
-            Monitor.Enter(_list, ref lockTaken);
+            if (!Monitor.TryEnter(_list, 100))
+                return new Enumerator(SyntaxSpanList.EmptySlice._list, false, 0, 0);
 
             int startIndex = FindStartIndex();
-            return new Enumerator(_list, lockTaken, startIndex, _span.End);
+            return new Enumerator(_list, true, startIndex, _span.End);
         }
 
         private int FindStartIndex()

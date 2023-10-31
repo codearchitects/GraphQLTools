@@ -14,6 +14,8 @@ namespace GraphQLTools.Analysis
 {
     internal readonly struct AnalyzedSpanBag
     {
+        private static readonly LinkedList<AnalyzedSpan> s_emptySpans = new LinkedList<AnalyzedSpan>();
+
         private readonly LinkedList<AnalyzedSpan> _analyzedSpans;
         private readonly ObjectPool<SyntaxSpanList> _spanListPool;
         private readonly object _synchronizationLock;
@@ -40,10 +42,10 @@ namespace GraphQLTools.Analysis
 
         public Enumerator GetEnumerator()
         {
-            bool lockTaken = false;
-            Monitor.Enter(_synchronizationLock, ref lockTaken);
+            if (!Monitor.TryEnter(_synchronizationLock, 100))
+                return new Enumerator(s_emptySpans, null, false);
 
-            return new Enumerator(_analyzedSpans, _synchronizationLock, lockTaken);
+            return new Enumerator(_analyzedSpans, _synchronizationLock, true);
         }
 
         public void Synchronize(INormalizedTextChangeCollection changes)
@@ -100,13 +102,26 @@ namespace GraphQLTools.Analysis
                         }
                         break;
 
+                    case ObjectCreationExpressionSyntax objectCreationExpression:
+                        if (objectCreationExpression.ArgumentList is null)
+                            break;
+
+                        foreach (ArgumentSyntax argument in objectCreationExpression.ArgumentList.Arguments)
+                        {
+                            if (!semanticModel.IsGqlString(argument, cancellationToken))
+                                continue;
+
+                            ScanGqlExpression(snapshot, objectCreationExpression, argument.Expression);
+                        }
+                        break;
+
                     case FieldDeclarationSyntax fieldDeclaration:
                         if (fieldDeclaration.Declaration is null)
                             break;
 
                         foreach (VariableDeclaratorSyntax variableDeclarator in fieldDeclaration.Declaration.Variables)
                         {
-                            ExpressionSyntax fieldDeclaratorExpression = variableDeclarator.Initializer.Value;
+                            ExpressionSyntax fieldDeclaratorExpression = variableDeclarator.Initializer?.Value;
                             if (fieldDeclaratorExpression is null)
                                 continue;
 
