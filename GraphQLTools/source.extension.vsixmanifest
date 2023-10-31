@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="GraphQLTools.56dc8242-f2d8-4fa5-ae5f-f531d2b3147d" Version="0.2" Language="en-US" Publisher="Code Architects Research" />
+        <Identity Id="GraphQLTools.56dc8242-f2d8-4fa5-ae5f-f531d2b3147d" Version="0.3" Language="en-US" Publisher="Code Architects Research" />
         <DisplayName>GraphQLTools</DisplayName>
-        <Description xml:space="preserve">GraphQL syntax highlighting support for StringSyntaxAttribute. To enable it, decorate your parameters or members with [StringSyntax("GraphQL")].</Description>
+        <Description xml:space="preserve">Enables GraphQL syntax highlighting on C# strings with [StringSyntax("GraphQL")].</Description>
         <License>LICENSE.txt</License>
         <Icon>Resources\logo.png</Icon>
         <PreviewImage>Resources\logo.png</PreviewImage>
