@@ -121,7 +121,7 @@ namespace GraphQLTools.Analysis
 
                         foreach (VariableDeclaratorSyntax variableDeclarator in fieldDeclaration.Declaration.Variables)
                         {
-                            ExpressionSyntax fieldDeclaratorExpression = variableDeclarator.Initializer.Value;
+                            ExpressionSyntax fieldDeclaratorExpression = variableDeclarator.Initializer?.Value;
                             if (fieldDeclaratorExpression is null)
                                 continue;
 
