@@ -102,6 +102,19 @@ namespace GraphQLTools.Analysis
                         }
                         break;
 
+                    case ObjectCreationExpressionSyntax objectCreationExpression:
+                        if (objectCreationExpression.ArgumentList is null)
+                            break;
+
+                        foreach (ArgumentSyntax argument in objectCreationExpression.ArgumentList.Arguments)
+                        {
+                            if (!semanticModel.IsGqlString(argument, cancellationToken))
+                                continue;
+
+                            ScanGqlExpression(snapshot, objectCreationExpression, argument.Expression);
+                        }
+                        break;
+
                     case FieldDeclarationSyntax fieldDeclaration:
                         if (fieldDeclaration.Declaration is null)
                             break;
