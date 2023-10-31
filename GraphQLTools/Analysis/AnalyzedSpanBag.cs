@@ -14,6 +14,8 @@ namespace GraphQLTools.Analysis
 {
     internal readonly struct AnalyzedSpanBag
     {
+        private static readonly LinkedList<AnalyzedSpan> s_emptySpans = new LinkedList<AnalyzedSpan>();
+
         private readonly LinkedList<AnalyzedSpan> _analyzedSpans;
         private readonly ObjectPool<SyntaxSpanList> _spanListPool;
         private readonly object _synchronizationLock;
@@ -40,10 +42,10 @@ namespace GraphQLTools.Analysis
 
         public Enumerator GetEnumerator()
         {
-            bool lockTaken = false;
-            Monitor.Enter(_synchronizationLock, ref lockTaken);
+            if (!Monitor.TryEnter(_synchronizationLock, 100))
+                return new Enumerator(s_emptySpans, null, false);
 
-            return new Enumerator(_analyzedSpans, _synchronizationLock, lockTaken);
+            return new Enumerator(_analyzedSpans, _synchronizationLock, true);
         }
 
         public void Synchronize(INormalizedTextChangeCollection changes)
